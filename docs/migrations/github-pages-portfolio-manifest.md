@@ -2,7 +2,7 @@
 
 Date: 2026-08-07
 Owner: Full-Stack-Assets
-Status: Task 1 inventory baseline
+Status: Task 1 inventory baseline, corrected after runtime-route inspection
 
 This is the authoritative portfolio migration table for the GitHub Pages rollout. Only rows classified `STATIC`, `STATIC_EXPORT`, or `HYBRID_DYNAMIC` are eligible for implementation. `WireandLogic.com` is explicitly excluded.
 
@@ -18,14 +18,14 @@ This is the authoritative portfolio migration table for the GitHub Pages rollout
 |---|---|---:|---|---|---|---|
 | Full-Stack-Assets/Full-Stack-Assets.github.io | public | main | STATIC | productweld.tech | account-level Pages repo; current `CNAME` is `productweld.tech` | INVENTORIED |
 | Full-Stack-Assets/BeyondMythos.com | private | main | HYBRID_DYNAMIC | beyondmythos.com | no matching project returned in connected Vercel project inventories | INVENTORIED |
-| Full-Stack-Assets/Nextgengear.cc | private | main | STATIC_EXPORT | nextgengear.cc | `prj_jaGHQ39OrYJJ7dWNWNwP4pn1Uz1t` / `nextgengear-cc`; live=false; latest deployment ERROR; Vercel Git aliases remain | INVENTORIED |
+| Full-Stack-Assets/Nextgengear.cc | private | main | HYBRID_DYNAMIC | nextgengear.cc | `prj_jaGHQ39OrYJJ7dWNWNwP4pn1Uz1t` / `nextgengear-cc`; live=false; latest deployment ERROR; Vercel Git aliases remain | RUNTIME_SEPARATION_REQUIRED |
 | Full-Stack-Assets/moviesrule.com | private | main | HYBRID_DYNAMIC | moviesrule.com | `prj_mNhX5lzSDRgIcC1HpBwsnKihVdbe` / `movies-rule-com`; live=false; apex + www still attached; latest deployment READY | INVENTORIED |
-| Full-Stack-Assets/-MoviesRule.com | private | main | STATIC_EXPORT | https://full-stack-assets.github.io/-MoviesRule.com/ | duplicate/legacy candidate for `moviesrule.com`; do not claim apex while canonical repo remains `moviesrule.com` | INVENTORIED |
-| Full-Stack-Assets/TheTunerDepot.com | private | main | STATIC_EXPORT | thetunerdepot.com | `prj_OnAy8u4i1lcm3EngqdDkR3SMAO6q` / `the-tuner-depot-com`; live=false; latest production deployment READY; Vercel Git aliases remain | INVENTORIED |
-| Full-Stack-Assets/-Astrokobi.com | private | main | STATIC_EXPORT | astrokobi.com | `prj_GU6RO2JZEbibzZnlrQfqArBI9s36` / `astrokobi-com`; live=false; apex + www attached; latest deployment READY | INVENTORIED |
-| Full-Stack-Assets/astrokobi.online | public | main | STATIC_EXPORT | astrokobi.online | `prj_BLcGIy8MQkYjwOGxTScc3ZqFoiiG` / `astrokobi-online`; live=false; apex + www attached; latest production deployment READY | INVENTORIED |
-| Full-Stack-Assets/astrokobi.site | public | main | STATIC_EXPORT | astrokobi.site | `prj_WWwlb4vjwYmvFIh0BLQ5ax0XfBuD` / `astrokobi-site`; live=false; apex + www attached; latest production deployment READY | INVENTORIED |
-| Full-Stack-Assets/astrokobi.space | public | main | STATIC_EXPORT | astrokobi.space | `prj_UM6JplFvfoLcwIYQyAabqEAd5kNi` / `astrokobi-space`; live=false; apex + www attached; latest production deployment READY | INVENTORIED |
+| Full-Stack-Assets/-MoviesRule.com | private | main | HYBRID_DYNAMIC | https://full-stack-assets.github.io/-MoviesRule.com/ | duplicate/legacy candidate for `moviesrule.com`; do not claim apex while canonical repo remains `moviesrule.com` | RUNTIME_SEPARATION_REQUIRED |
+| Full-Stack-Assets/TheTunerDepot.com | private | main | HYBRID_DYNAMIC | thetunerdepot.com | `prj_OnAy8u4i1lcm3EngqdDkR3SMAO6q` / `the-tuner-depot-com`; live=false; latest production deployment READY; Vercel Git aliases remain | RUNTIME_SEPARATION_REQUIRED |
+| Full-Stack-Assets/-Astrokobi.com | private | main | HYBRID_DYNAMIC | astrokobi.com | `prj_GU6RO2JZEbibzZnlrQfqArBI9s36` / `astrokobi-com`; live=false; apex + www attached; latest deployment READY | RUNTIME_SEPARATION_REQUIRED |
+| Full-Stack-Assets/astrokobi.online | public | main | HYBRID_DYNAMIC | astrokobi.online | `prj_BLcGIy8MQkYjwOGxTScc3ZqFoiiG` / `astrokobi-online`; live=false; apex + www attached; latest production deployment READY | RUNTIME_SEPARATION_REQUIRED |
+| Full-Stack-Assets/astrokobi.site | public | main | HYBRID_DYNAMIC | astrokobi.site | `prj_WWwlb4vjwYmvFIh0BLQ5ax0XfBuD` / `astrokobi-site`; live=false; apex + www attached; latest production deployment READY | RUNTIME_SEPARATION_REQUIRED |
+| Full-Stack-Assets/astrokobi.space | public | main | HYBRID_DYNAMIC | astrokobi.space | `prj_UM6JplFvfoLcwIYQyAabqEAd5kNi` / `astrokobi-space`; live=false; apex + www attached; latest production deployment READY | RUNTIME_SEPARATION_REQUIRED |
 | Full-Stack-Assets/Dropfable.com | private | main | HYBRID_DYNAMIC | dropfable.com | no exact matching project returned in connected Vercel inventories; Vite frontend + Express server build | INVENTORIED |
 | Full-Stack-Assets/vibecoderz-app | private | main | HYBRID_DYNAMIC | vibecoderz.app | `prj_y8NXnCPK2lCZJeq1fYTSU37UhLg5` / `vibecoderz.app` | INVENTORIED |
 | Full-Stack-Assets/portfolio-hub | public | main | HYBRID_DYNAMIC | https://full-stack-assets.github.io/portfolio-hub/ | `prj_M3u771hc2XLGL55xqsN81XO3Rrbn` / `portfolio-hub`; Next.js + next-auth | INVENTORIED |
@@ -39,16 +39,18 @@ This is the authoritative portfolio migration table for the GitHub Pages rollout
 | Full-Stack-Assets/TradeQuotePro | public | main | HYBRID_DYNAMIC | https://full-stack-assets.github.io/TradeQuotePro/ | `prj_dQRxzuV3tXzQbYubrnX1EHvoW9s3` / `trade-quote-pro` | INVENTORIED |
 | Full-Stack-Assets/overhead-ar-flight-tracker | private | main | HYBRID_DYNAMIC | https://full-stack-assets.github.io/overhead-ar-flight-tracker/ | `prj_SzXBklk7wdC2kO1LeK7hs7FiVZ8r` / `overhead-ar-flight-tracker` | INVENTORIED |
 
-## Confirmed framework evidence
+## Confirmed framework/runtime evidence
 
-- `BeyondMythos.com`: Node/Express runtime with Stripe; generated static content exists, but commerce/API behavior requires a server runtime. Classification: `HYBRID_DYNAMIC`.
-- `Nextgengear.cc`: Next.js 15 + TinaCMS build. Classification: `STATIC_EXPORT` pending build verification.
-- `moviesrule.com`: Next.js 16 + Prisma/PostgreSQL + NextAuth. Classification: `HYBRID_DYNAMIC`.
-- `-MoviesRule.com`: Next.js 15 + TinaCMS. Classification: `STATIC_EXPORT`.
-- `TheTunerDepot.com`: Next.js 15 + TinaCMS. Classification: `STATIC_EXPORT`.
-- `-Astrokobi.com`, `astrokobi.online`, `astrokobi.site`, and `astrokobi.space`: Next.js/TinaCMS family. Classification: `STATIC_EXPORT` pending build verification.
-- `Dropfable.com`: Vite/React frontend plus Express server bundle and Firebase/Google GenAI dependencies. Classification: `HYBRID_DYNAMIC`.
-- `portfolio-hub`: Next.js 14 + NextAuth. Classification: `HYBRID_DYNAMIC`.
+- `BeyondMythos.com`: Node/Express runtime with Stripe; generated static content exists, but commerce/API behavior requires a server runtime.
+- `Nextgengear.cc`: Next.js 15 + TinaCMS; POST `/api/subscribe` and POST `/api/cron/generate` require runtime separation before static export.
+- `moviesrule.com`: Next.js 16 + Prisma/PostgreSQL + NextAuth.
+- `-MoviesRule.com`: Next.js/Tina family and must be checked for the same runtime routes as sibling sites before export.
+- `TheTunerDepot.com`: Next.js/Tina; POST `/api/subscribe` is Node-only/dynamic. Its RSS route is build-time-capable after removing ISR behavior, but currently contains incorrect WireandLogic fallback branding.
+- `-Astrokobi.com`: Next.js/Tina plus request-dependent dynamic Open Graph route at `/api/og`, which is incompatible with a pure static export unchanged.
+- `astrokobi.online`: Next.js/Tina plus `/api/cron/generate` and `/api/subscribe` server routes.
+- `astrokobi.site` and `astrokobi.space`: Next.js/Tina siblings with newsletter/static-generation patterns requiring runtime-route review before export.
+- `Dropfable.com`: Vite/React frontend plus Express server bundle and Firebase/Google GenAI dependencies.
+- `portfolio-hub`: Next.js 14 + NextAuth.
 
 ## Vercel teams inventoried
 
@@ -67,10 +69,10 @@ This exclusion list is conservative: a repository can move into scope only after
 
 ## Migration ordering
 
-1. Domain-named `STATIC_EXPORT` sites: Astrokobi network, TheTunerDepot.com, Nextgengear.cc.
-2. Non-domain `STATIC_EXPORT` sites after exact canonical ownership is resolved (`-MoviesRule.com`).
-3. `HYBRID_DYNAMIC` sites: BeyondMythos.com, moviesrule.com, Dropfable.com, portfolio-hub, and other app frontends.
-4. ProductWeld/account-level root routing cleanup.
+1. ProductWeld/account-level STATIC root validation and parent-path cleanup.
+2. Trend/news HYBRID_DYNAMIC family (`Nextgengear.cc`, TheTunerDepot, Astrokobi family, legacy MoviesRule frontend): remove runtime-only frontend routes by shifting generation to GitHub Actions and replacing or isolating newsletter/OG endpoints.
+3. Larger HYBRID_DYNAMIC applications (`BeyondMythos.com`, `moviesrule.com`, `Dropfable.com`, `portfolio-hub`, etc.).
+4. Per-site Pages verification, DNS cutover, then Vercel frontend/domain/Git detachment.
 5. Final Vercel duplicate-project/domain/Git-link audit.
 
 ## Safety gates
