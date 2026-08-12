@@ -34,7 +34,8 @@ test('linked local assets exist and preserve review-only behavior', () => {
   assert.match(css, /@media\s*\(max-width:/);
   assert.match(css, /\.tool-card/);
   assert.match(script, /data-action/);
-  assert.match(script, /local synthetic preview/i);
+  assert.match(script, /browser-local preview/i);
+  assert.match(script, /no provider call was made/i);
   assert.doesNotMatch(script, /\bfetch\s*\(/);
   assert.doesNotMatch(script, /XMLHttpRequest|WebSocket|EventSource/);
   assert.doesNotMatch(script, /sk-proj-|api[_-]?key|authorization/i);
