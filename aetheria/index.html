@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090718">
+  <meta name="description" content="Aetheria unified generative audio workspace review interface">
+  <title>Aetheria · Generative Audio Workspace</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span><div><strong>AETHERIA</strong><small>Generative audio</small></div></a>
+      <nav class="nav" aria-label="Aetheria tools">
+        <button class="active" data-nav="home"><span>HM</span><span>Home</span></button>
+        <button data-tool="Music"><span>MU</span><span>Music</span></button>
+        <button data-tool="SFX"><span>FX</span><span>SFX</span></button>
+        <button data-tool="Narration"><span>NR</span><span>Narration</span></button>
+        <button data-tool="Agents"><span>AG</span><span>Agents</span></button>
+        <button data-tool="Voices"><span>VO</span><span>Voices</span></button>
+        <button data-nav="library"><span>LB</span><span>Library</span></button>
+        <button data-nav="settings"><span>ST</span><span>Settings</span></button>
+      </nav>
+      <div class="rail-foot"><div class="provider"><span>Review-only workspace</span><strong>Provider calls disabled</strong><small>Interface actions create local synthetic previews only. No ElevenLabs or external model request is sent.</small></div></div>
+    </aside>
+
+    <main class="main" id="top">
+      <div class="topbar"><span class="review-pill">Review-only interface</span><div class="top-actions"><button type="button" data-action="clear">Clear</button><button class="primary" type="button" data-action="new">New Project</button></div></div>
+      <header class="hero"><p class="eyebrow">Aetheria unified studio</p><h1 aria-label="One Workspace for Generative Audio">One Workspace for <span>Generative Audio</span></h1><p>Create production-ready music, sound effects, narration, voice agents, and reusable voices through one coherent workflow. This branch demonstrates the interface without activating provider authority.</p></header>
+
+      <section class="workspace" aria-label="Aetheria creation workspace">
+        <div>
+          <article class="create-panel">
+            <div class="section-head"><div><p class="eyebrow">Create</p><h2>Choose an audio workflow</h2></div><span data-selected-label>Music selected</span></div>
+            <div class="tool-grid">
+              <button class="tool-card active" data-tool="Music"><span class="tool-icon">MU</span><b>↗</b><strong>Music</strong><small>Generate structured tracks and cues</small></button>
+              <button class="tool-card" data-tool="SFX"><span class="tool-icon">FX</span><b>↗</b><strong>SFX</strong><small>Create designed sounds and ambience</small></button>
+              <button class="tool-card" data-tool="Narration"><span class="tool-icon">NR</span><b>↗</b><strong>Narration</strong><small>Produce clear speech and long-form reads</small></button>
+              <button class="tool-card" data-tool="Agents"><span class="tool-icon">AG</span><b>↗</b><strong>Agents</strong><small>Prototype governed voice interactions</small></button>
+              <button class="tool-card" data-tool="Voices"><span class="tool-icon">VO</span><b>↗</b><strong>Voices</strong><small>Organize voice profiles and generation settings</small></button>
+            </div>
+          </article>
+
+          <article class="composer">
+            <div class="section-head"><div><p class="eyebrow">Prompt workspace</p><h3 data-composer-title>Music brief</h3></div><span>Local preview</span></div>
+            <div class="composer-grid">
+              <textarea aria-label="Generation brief" data-prompt placeholder="Describe the mood, pacing, structure, and intended use…">Cinematic launch cue with a restrained electronic pulse, evolving harmony, and a decisive final lift.</textarea>
+              <div class="composer-side"><label for="duration">Duration</label><select id="duration" data-duration><option>30 seconds</option><option selected>60 seconds</option><option>90 seconds</option><option>3 minutes</option></select><button class="generate" type="button" data-action="generate">Generate review preview</button></div>
+            </div>
+            <p class="guardrail">Synthetic interface behavior only. Generation creates a browser-local review card and does not call ElevenLabs, upload audio, publish a release, or store credentials.</p>
+          </article>
+        </div>
+
+        <div class="right-column">
+          <article class="recent-panel">
+            <div class="section-head"><div><p class="eyebrow">Library</p><h2>Recent Creations</h2></div><span data-count>4 items</span></div>
+            <input class="search" type="search" placeholder="Filter creations" aria-label="Filter recent creations" data-search>
+            <div class="recent-list" data-recent>
+              <div class="creation" data-name="Cinematic Trailer"><span class="creation-art">MU</span><div><strong>Cinematic Trailer</strong><small>Music · synthetic review record</small></div><time>2:34</time></div>
+              <div class="creation" data-name="Urban Ambience"><span class="creation-art">FX</span><div><strong>Urban Ambience</strong><small>SFX · synthetic review record</small></div><time>1:12</time></div>
+              <div class="creation" data-name="Product Narration"><span class="creation-art">NR</span><div><strong>Product Narration</strong><small>Narration · synthetic review record</small></div><time>0:48</time></div>
+              <div class="creation" data-name="Support Concierge"><span class="creation-art">AG</span><div><strong>Support Concierge</strong><small>Agents · synthetic review record</small></div><time>3:05</time></div>
+            </div>
+          </article>
+
+          <article class="wave-player">
+            <div class="wave-head"><span data-now-playing>Cinematic Trailer</span><span>synthetic waveform</span></div>
+            <div class="wave" data-wave aria-hidden="true"><i style="height:34%"></i><i style="height:68%"></i><i style="height:48%"></i><i style="height:88%"></i><i style="height:54%"></i><i style="height:76%"></i><i style="height:42%"></i><i style="height:92%"></i><i style="height:63%"></i><i style="height:38%"></i><i style="height:78%"></i><i style="height:52%"></i><i style="height:86%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:31%"></i><i style="height:82%"></i><i style="height:56%"></i></div>
+            <button class="play" type="button" data-action="play">Play waveform animation</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="capabilities"><p>Generate music, SFX, narration, agents, and voices with a provider-ready architecture centered on clear controls and reviewable outputs.</p><div class="pills"><span>AI Audio</span><span>ElevenLabs</span><span>Creator Tools</span><span>Provider-neutral boundaries</span></div></section>
+    </main>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
