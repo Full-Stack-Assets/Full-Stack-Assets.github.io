@@ -1,0 +1,23 @@
+name: BuildGraph interface review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'buildgraph/**'
+      - 'tests/buildgraph-interface.test.mjs'
+      - '.github/workflows/buildgraph-interface-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Interface contract
+        run: node --test tests/buildgraph-interface.test.mjs
