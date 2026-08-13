@@ -8,13 +8,10 @@ on:
       - 'tools/prepare_fullstackassets_pages.py'
       - 'tests/test_prepare_fullstackassets_pages.py'
       - 'CNAME'
+      - 'aetheria/**'
+      - 'buildgraph/**'
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/fullstackassets-pages.yml'
-      - 'tools/prepare_fullstackassets_pages.py'
-      - 'tests/test_prepare_fullstackassets_pages.py'
-      - 'CNAME'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
@@ -76,6 +73,17 @@ jobs:
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
+
+      - name: Lock Pages publishing to GitHub Actions
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh api --method PUT
+          -H "Accept: application/vnd.github+json"
+          -H "X-GitHub-Api-Version: 2022-11-28"
+          "repos/${GITHUB_REPOSITORY}/pages"
+          -f build_type=workflow
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'

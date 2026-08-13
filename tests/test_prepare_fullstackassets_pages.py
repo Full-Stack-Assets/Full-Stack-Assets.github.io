@@ -113,5 +113,17 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.assertIn("symbolic link is not allowed", result.stderr)
 
 
+class PagesWorkflowTests(unittest.TestCase):
+    def test_workflow_locks_pages_publishing_to_actions_mode(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "fullstackassets-pages.yml").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("Lock Pages publishing to GitHub Actions", workflow)
+        self.assertIn("gh api --method PUT", workflow)
+        self.assertIn("-f build_type=workflow", workflow)
+        self.assertIn("push:\n    branches: [main]\n  workflow_dispatch:", workflow)
+
+
 if __name__ == "__main__":
     unittest.main()
