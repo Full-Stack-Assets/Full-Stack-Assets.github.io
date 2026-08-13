@@ -1,0 +1,97 @@
+name: Deploy Fullstackassets.com to GitHub Pages
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/fullstackassets-pages.yml'
+      - 'tools/prepare_fullstackassets_pages.py'
+      - 'tests/test_prepare_fullstackassets_pages.py'
+      - 'CNAME'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fullstackassets-pages.yml'
+      - 'tools/prepare_fullstackassets_pages.py'
+      - 'tests/test_prepare_fullstackassets_pages.py'
+      - 'CNAME'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: fullstackassets-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Pages host
+        uses: actions/checkout@v4
+        with:
+          path: host
+
+      - name: Checkout canonical portfolio source
+        uses: actions/checkout@v4
+        with:
+          repository: Full-Stack-Assets/FullStackAssets
+          ref: main
+          path: source
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Test artifact builder
+        run: python -m unittest discover -s host/tests -p 'test_prepare_fullstackassets_pages.py' -v
+
+      - name: Build verified Pages artifact
+        run: >-
+          python host/tools/prepare_fullstackassets_pages.py
+          --host host
+          --source source
+          --output site
+
+      - name: Verify deployment artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f site/index.html
+          test -f site/robots.txt
+          test -f site/sitemap.xml
+          test -f site/aetheria/index.html
+          test -f site/buildgraph/index.html
+          test -f site/.nojekyll
+          test "$(cat site/CNAME)" = "fullstackassets.com"
+          ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
