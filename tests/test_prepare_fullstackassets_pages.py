@@ -114,14 +114,21 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
 
 
 class PagesWorkflowTests(unittest.TestCase):
-    def test_workflow_locks_pages_publishing_to_actions_mode(self) -> None:
+    def test_workflow_deploys_verified_artifact_after_legacy_build(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "fullstackassets-pages.yml").read_text(
             encoding="utf-8"
         )
 
-        self.assertIn("Lock Pages publishing to GitHub Actions", workflow)
-        self.assertIn("gh api --method PUT", workflow)
-        self.assertIn("-f build_type=workflow", workflow)
+        self.assertNotIn("build_type=workflow", workflow)
+        self.assertIn("Wait for legacy Pages build for this commit", workflow)
+        self.assertIn('repos/${GITHUB_REPOSITORY}/pages/builds/latest', workflow)
+        self.assertIn('\"$legacy_commit\" == \"$GITHUB_SHA\"', workflow)
+        self.assertIn('\"$legacy_status\" == \"built\"', workflow)
+        self.assertIn('\"$legacy_status\" == \"errored\"', workflow)
+        self.assertLess(
+            workflow.index("Wait for legacy Pages build for this commit"),
+            workflow.index("Upload Pages artifact"),
+        )
         self.assertIn("push:\n    branches: [main]\n  workflow_dispatch:", workflow)
 
 

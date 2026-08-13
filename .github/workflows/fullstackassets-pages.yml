@@ -74,16 +74,41 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
-      - name: Lock Pages publishing to GitHub Actions
-        if: github.event_name != 'pull_request'
+      - name: Wait for legacy Pages build for this commit
+        if: github.event_name == 'push'
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          gh api --method PUT
-          -H "Accept: application/vnd.github+json"
-          -H "X-GitHub-Api-Version: 2022-11-28"
-          "repos/${GITHUB_REPOSITORY}/pages"
-          -f build_type=workflow
+        run: |
+          set -euo pipefail
+
+          pages_build_type="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type')"
+          if [[ "$pages_build_type" == "workflow" ]]; then
+            echo "Pages already publishes exclusively through GitHub Actions."
+            exit 0
+          fi
+
+          for attempt in {1..48}; do
+            legacy_build="$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest")"
+            legacy_commit="$(jq -r '.commit // ""' <<<"$legacy_build")"
+            legacy_status="$(jq -r '.status // ""' <<<"$legacy_build")"
+
+            if [[ "$legacy_commit" == "$GITHUB_SHA" && "$legacy_status" == "built" ]]; then
+              echo "Legacy Pages build settled for $GITHUB_SHA; verified artifact will deploy last."
+              exit 0
+            fi
+
+            if [[ "$legacy_commit" == "$GITHUB_SHA" && "$legacy_status" == "errored" ]]; then
+              echo "Legacy Pages build failed for $GITHUB_SHA; refusing an ambiguous deployment." >&2
+              exit 1
+            fi
+
+            echo "Waiting for legacy Pages build for $GITHUB_SHA (attempt $attempt/48)."
+            sleep 5
+          done
+
+          echo "Timed out waiting for the legacy Pages build for $GITHUB_SHA." >&2
+          exit 1
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
