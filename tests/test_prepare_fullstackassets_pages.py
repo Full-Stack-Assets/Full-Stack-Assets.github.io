@@ -129,6 +129,11 @@ class PagesWorkflowTests(unittest.TestCase):
             workflow.index("Wait for legacy Pages build for this commit"),
             workflow.index("Upload Pages artifact"),
         )
+        production_condition = (
+            "github.event_name != 'pull_request' && github.ref == 'refs/heads/main'"
+        )
+        self.assertNotIn("github.event_name == 'push'", workflow)
+        self.assertGreaterEqual(workflow.count(production_condition), 4)
         self.assertIn("push:\n    branches: [main]\n  workflow_dispatch:", workflow)
 
 
