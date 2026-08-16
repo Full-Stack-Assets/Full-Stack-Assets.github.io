@@ -1,0 +1,9 @@
+{
+  "name": "fullstackassets-pages",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/dev-server.mjs",
+    "test:buildgraph": "node --test tests/buildgraph-core.test.mjs tests/buildgraph-data.test.mjs tests/buildgraph-interface.test.mjs"
+  }
+}

@@ -25,6 +25,16 @@ PUBLIC_SOURCE_PATHS = (
 )
 PRESERVED_HOST_PATHS = ("aetheria", "buildgraph")
 REQUIRED_ARTIFACT_FILES = ("index.html", "robots.txt", "sitemap.xml", "CNAME", ".nojekyll")
+REQUIRED_HOST_FILES = (
+    "aetheria/index.html",
+    "aetheria/app.js",
+    "aetheria/styles.css",
+    "buildgraph/index.html",
+    "buildgraph/app.js",
+    "buildgraph/core.mjs",
+    "buildgraph/styles.css",
+    "buildgraph/data/projects.json",
+)
 
 VERCEL_BOOTSTRAP_RE = re.compile(
     r"\s*<script(?:\s[^>]*)?>\s*window\.va\s*=.*?</script>\s*",
@@ -55,6 +65,12 @@ def _validate_required_paths(root: Path, paths: Iterable[str], *, label: str) ->
             raise ArtifactError(f"missing required {label} path: {relative}")
 
 
+def _validate_required_files(root: Path, paths: Iterable[str], *, label: str) -> None:
+    for relative in paths:
+        if not (root / relative).is_file():
+            raise ArtifactError(f"missing required {label} file: {relative}")
+
+
 def _copy_path(source_root: Path, output_root: Path, relative: str) -> None:
     source = source_root / relative
     destination = output_root / relative
@@ -75,6 +91,7 @@ def _strip_vercel_analytics(output_root: Path) -> None:
 
 def _audit_artifact(output_root: Path) -> None:
     _validate_required_paths(output_root, REQUIRED_ARTIFACT_FILES, label="artifact")
+    _validate_required_files(output_root, REQUIRED_HOST_FILES, label="artifact")
     _reject_symlinks(output_root)
 
     cname = (output_root / "CNAME").read_text(encoding="utf-8")
@@ -102,6 +119,7 @@ def prepare_site(host_root: Path, source_root: Path, output_root: Path) -> None:
 
     _validate_required_paths(source_root, PUBLIC_SOURCE_PATHS, label="source")
     _validate_required_paths(host_root, PRESERVED_HOST_PATHS, label="host")
+    _validate_required_files(host_root, REQUIRED_HOST_FILES, label="host")
     _reject_symlinks(source_root)
     _reject_symlinks(host_root)
 

@@ -7,6 +7,9 @@ on:
       - '.github/workflows/fullstackassets-pages.yml'
       - 'tools/prepare_fullstackassets_pages.py'
       - 'tests/test_prepare_fullstackassets_pages.py'
+      - 'tests/buildgraph-core.test.mjs'
+      - 'tests/buildgraph-data.test.mjs'
+      - 'tests/buildgraph-interface.test.mjs'
       - 'CNAME'
       - 'aetheria/**'
       - 'buildgraph/**'
@@ -48,8 +51,20 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Test artifact builder
         run: python -m unittest discover -s host/tests -p 'test_prepare_fullstackassets_pages.py' -v
+
+      - name: Test BuildGraph contracts
+        run: >-
+          node --test
+          host/tests/buildgraph-core.test.mjs
+          host/tests/buildgraph-data.test.mjs
+          host/tests/buildgraph-interface.test.mjs
 
       - name: Build verified Pages artifact
         run: >-
@@ -66,7 +81,13 @@ jobs:
           test -f site/robots.txt
           test -f site/sitemap.xml
           test -f site/aetheria/index.html
+          test -f site/aetheria/app.js
+          test -f site/aetheria/styles.css
           test -f site/buildgraph/index.html
+          test -f site/buildgraph/app.js
+          test -f site/buildgraph/core.mjs
+          test -f site/buildgraph/styles.css
+          test -f site/buildgraph/data/projects.json
           test -f site/.nojekyll
           test "$(cat site/CNAME)" = "fullstackassets.com"
           ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'

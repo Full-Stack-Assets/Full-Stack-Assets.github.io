@@ -10,6 +10,16 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "tools" / "prepare_fullstackassets_pages.py"
+HOST_RUNTIME_FILES = (
+    "aetheria/index.html",
+    "aetheria/app.js",
+    "aetheria/styles.css",
+    "buildgraph/index.html",
+    "buildgraph/app.js",
+    "buildgraph/core.mjs",
+    "buildgraph/styles.css",
+    "buildgraph/data/projects.json",
+)
 
 
 class PrepareFullstackassetsPagesTests(unittest.TestCase):
@@ -22,10 +32,10 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.host.mkdir()
         self.source.mkdir()
 
-        for namespace in ("aetheria", "buildgraph"):
-            target = self.host / namespace
-            target.mkdir()
-            (target / "index.html").write_text(f"<h1>{namespace}</h1>", encoding="utf-8")
+        for relative in HOST_RUNTIME_FILES:
+            target = self.host / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(f"fixture for {relative}\n", encoding="utf-8")
 
         (self.host / "docs").mkdir()
         (self.host / "docs" / "internal.md").write_text("not public", encoding="utf-8")
@@ -83,6 +93,8 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.assertTrue((self.output / "index.html").is_file())
         self.assertTrue((self.output / "aetheria" / "index.html").is_file())
         self.assertTrue((self.output / "buildgraph" / "index.html").is_file())
+        for relative in HOST_RUNTIME_FILES:
+            self.assertTrue((self.output / relative).is_file(), relative)
         self.assertEqual((self.output / "CNAME").read_text(encoding="utf-8"), "fullstackassets.com\n")
         self.assertTrue((self.output / ".nojekyll").is_file())
         self.assertFalse((self.output / "docs").exists())
@@ -102,6 +114,20 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("missing required source path: sitemap.xml", result.stderr)
+
+    def test_fails_closed_when_a_host_runtime_file_is_missing(self) -> None:
+        for relative in HOST_RUNTIME_FILES:
+            with self.subTest(relative=relative):
+                missing = self.host / relative
+                original = missing.read_bytes()
+                missing.unlink()
+
+                result = self.run_builder()
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"missing required host file: {relative}", result.stderr)
+                missing.parent.mkdir(parents=True, exist_ok=True)
+                missing.write_bytes(original)
 
     @unittest.skipUnless(hasattr(os, "symlink"), "symlinks are unavailable")
     def test_rejects_symbolic_links_before_publishing(self) -> None:
@@ -138,6 +164,12 @@ class PagesWorkflowTests(unittest.TestCase):
         self.assertNotIn("github.event_name == 'push'", workflow)
         self.assertGreaterEqual(workflow.count(production_condition), 4)
         self.assertIn("push:\n    branches: [main]\n  workflow_dispatch:", workflow)
+        self.assertIn("actions/setup-node@v4", workflow)
+        self.assertIn("tests/buildgraph-core.test.mjs", workflow)
+        self.assertIn("tests/buildgraph-data.test.mjs", workflow)
+        self.assertIn("tests/buildgraph-interface.test.mjs", workflow)
+        for relative in HOST_RUNTIME_FILES:
+            self.assertIn(f"test -f site/{relative}", workflow)
 
 
 if __name__ == "__main__":

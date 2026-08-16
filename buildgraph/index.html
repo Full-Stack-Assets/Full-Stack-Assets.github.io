@@ -3,91 +3,149 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#07101f">
-  <meta name="description" content="BuildGraph OS project memory, reuse, and duplicate-work prevention review interface">
-  <title>BuildGraph OS · Project Memory</title>
+  <meta name="theme-color" content="#050b17">
+  <meta name="description" content="BuildGraph OS — a local-first MindMap workspace for projects, repositories, documents, dependencies, and evidence.">
+  <title>BuildGraph OS · Project Command Center</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="page" id="top">
-    <header class="hero">
-      <a class="hero-brand" href="#top"><span class="hero-mark" aria-hidden="true"><i></i><i></i><i></i></span><strong>BUILDGRAPH OS</strong></a>
-      <p class="eyebrow">Organization memory layer · review snapshot</p>
-      <h1 aria-label="Project Memory, Reuse & Duplicate-Work Prevention">Project Memory, Reuse &amp; <span>Duplicate-Work Prevention</span></h1>
-      <p class="lede">Search everything you have built, understand provenance, find reusable assets, and surface likely duplicate work before another project starts from zero.</p>
-      <div class="hero-actions"><a class="primary" href="#workspace">Explore the memory graph</a><button type="button" data-action="focus-search">Search snapshot</button></div>
+  <a class="skip-link" href="#mindmap">Skip to MindMap</a>
+  <div class="loading-screen" data-loading role="status" aria-live="polite">
+    <i class="ri-node-tree" aria-hidden="true"></i>
+    <strong>Loading BuildGraph evidence…</strong>
+  </div>
+
+  <div class="app-shell" data-app hidden>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="BuildGraph OS home">
+        <i class="ri-node-tree brand-icon" aria-hidden="true"></i>
+        <span><strong>BUILDGRAPH OS</strong><small>Project command center</small></span>
+      </a>
+
+      <label class="global-search">
+        <i class="ri-search-line" aria-hidden="true"></i>
+        <span class="sr-only">Search projects, repositories, stacks, and tags</span>
+        <input type="search" data-search placeholder="Search projects, repos, stacks, tags…" autocomplete="off">
+        <kbd>⌘ K</kbd>
+      </label>
+
+      <div class="filter-strip" role="group" aria-label="Workspace filters">
+        <label class="compact-field"><span class="sr-only">Lifecycle status</span><i class="ri-pulse-line" aria-hidden="true"></i><select data-filter="status" aria-label="Filter by lifecycle status"><option value="all">Lifecycle</option><option value="active">Active</option><option value="experimental">Experimental</option><option value="paused">Paused</option><option value="blocked">Blocked</option><option value="completed">Completed</option><option value="inactive">Inactive</option><option value="archived">Archived</option><option value="unknown">Unknown</option></select></label>
+        <label class="compact-field"><span class="sr-only">Project visibility</span><i class="ri-database-2-line" aria-hidden="true"></i><select data-filter="visibility" aria-label="Filter by visibility"><option value="all">Visibility</option><option value="public">Public</option><option value="private">Private</option><option value="internal">Internal</option></select></label>
+        <label class="compact-field"><span class="sr-only">Repository health</span><i class="ri-shield-check-line" aria-hidden="true"></i><select data-filter="health" aria-label="Filter by repository health"><option value="all">Health</option><option value="healthy">Healthy</option><option value="attention">Attention</option><option value="stale">Stale</option><option value="archived">Archived</option><option value="unknown">Unknown</option></select></label>
+        <label class="compact-field tag-filter"><span class="sr-only">Project tag</span><i class="ri-price-tag-3-line" aria-hidden="true"></i><select data-filter="tag" aria-label="Filter by project tag"><option value="all">Tags</option></select></label>
+        <label class="compact-field sort-field"><span class="sr-only">Sort projects</span><i class="ri-sort-desc" aria-hidden="true"></i><select data-sort aria-label="Sort projects"><option value="recent">Recent</option><option value="name">Name</option><option value="priority">Priority</option></select></label>
+      </div>
+
+      <div class="top-actions">
+        <button class="action-button" type="button" data-action="refresh" aria-label="Refresh selected public repository metadata" title="Refresh selected public repository metadata"><i class="ri-refresh-line" aria-hidden="true"></i><span>Refresh</span></button>
+        <button class="action-button" type="button" data-action="import" aria-label="Import local workspace catalog"><i class="ri-upload-cloud-2-line" aria-hidden="true"></i><span>Import</span></button>
+        <div class="menu-shell">
+          <button class="action-button" type="button" data-action="toggle-export" aria-label="Open workspace export menu" aria-expanded="false" aria-controls="export-menu"><i class="ri-download-cloud-2-line" aria-hidden="true"></i><span>Export</span><i class="ri-arrow-down-s-line" aria-hidden="true"></i></button>
+          <div class="popup-menu" id="export-menu" data-export-menu hidden>
+            <button type="button" data-export="json"><i class="ri-braces-line" aria-hidden="true"></i>Workspace JSON</button>
+            <button type="button" data-export="csv"><i class="ri-table-line" aria-hidden="true"></i>Projects CSV</button>
+            <button type="button" data-export="markdown"><i class="ri-markdown-line" aria-hidden="true"></i>Workspace Markdown</button>
+            <button type="button" data-export="zip"><i class="ri-file-zip-line" aria-hidden="true"></i>Complete ZIP archive</button>
+          </div>
+        </div>
+      </div>
+      <div class="evidence-date"><span data-current-date>Aug 16, 2026</span><small data-refresh-label>Bundled evidence</small></div>
     </header>
 
-    <section class="app-frame" id="workspace" aria-label="BuildGraph OS interface">
-      <aside class="rail">
-        <div class="brand"><span class="small-mark"><i></i><i></i><i></i></span><div><strong>BUILDGRAPH OS</strong><small>Project memory</small></div></div>
-        <nav aria-label="BuildGraph navigation" class="nav">
-          <button class="active" data-view="Projects"><span>01</span>Projects</button>
-          <button data-view="Assets"><span>02</span>Assets</button>
-          <button data-view="Duplicates"><span>03</span>Duplicates</button>
-          <button data-view="Graph"><span>04</span>Graph</button>
-          <button data-view="Collections"><span>05</span>Collections</button>
-          <button data-view="Integrations"><span>06</span>Integrations</button>
-          <button data-view="Settings"><span>07</span>Settings</button>
-        </nav>
-        <div class="snapshot">
-          <span>Verified review snapshot</span>
-          <strong>87 projects indexed</strong>
-          <small>Observed 2026-08-11T20:10:00.000Z<br>Snapshot c017fe69393ce3b0<br>Browser-local filtering only. No private source ingestion or connector authentication is active.</small>
-        </div>
-      </aside>
+    <nav class="global-nav" aria-label="BuildGraph sections">
+      <button class="nav-button active" type="button" data-view="map" aria-label="Map" aria-current="page"><i class="ri-radar-line" aria-hidden="true"></i><span>Map</span></button>
+      <button class="nav-button" type="button" data-view="projects" aria-label="Projects"><i class="ri-apps-2-line" aria-hidden="true"></i><span>Projects</span></button>
+      <button class="nav-button" type="button" data-view="repositories" aria-label="Repositories"><i class="ri-github-line" aria-hidden="true"></i><span>Repositories</span></button>
+      <button class="nav-button" type="button" data-view="research" aria-label="Research"><i class="ri-flask-line" aria-hidden="true"></i><span>Research</span></button>
+      <button class="nav-button" type="button" data-view="business" aria-label="Business"><i class="ri-briefcase-4-line" aria-hidden="true"></i><span>Business</span></button>
+      <button class="nav-button" type="button" data-view="media" aria-label="Media"><i class="ri-music-2-line" aria-hidden="true"></i><span>Media</span></button>
+      <button class="nav-button" type="button" data-view="documents" aria-label="Documents"><i class="ri-file-copy-2-line" aria-hidden="true"></i><span>Documents</span></button>
+      <button class="nav-button" type="button" data-view="connections" aria-label="Connections"><i class="ri-share-line" aria-hidden="true"></i><span>Connections</span></button>
+      <button class="nav-button" type="button" data-view="activity" aria-label="Activity"><i class="ri-pulse-line" aria-hidden="true"></i><span>Activity</span></button>
+      <button class="nav-button" type="button" data-view="settings" aria-label="Settings"><i class="ri-settings-4-line" aria-hidden="true"></i><span>Settings</span></button>
+      <button class="nav-collapse" type="button" data-action="toggle-navigation" aria-label="Collapse navigation"><i class="ri-contract-left-line" aria-hidden="true"></i></button>
+    </nav>
 
-      <main class="workspace-main">
-        <div class="workspace-top">
-          <label class="search-shell"><span>⌕</span><input type="search" data-search placeholder="Search across 87 projects and 3,601 assets…" aria-label="Search BuildGraph review snapshot"><kbd>⌘K</kbd></label>
-          <span class="review-pill">Read-only review</span>
-        </div>
+    <aside class="project-outline" aria-label="Project outline">
+      <div class="outline-head">
+        <div><span class="section-label">Focus</span><strong data-focus-name>No project selected</strong></div>
+        <button type="button" data-action="toggle-outline" aria-label="Hide project outline"><i class="ri-side-bar-line" aria-hidden="true"></i></button>
+      </div>
+      <div class="focus-summary" data-focus-summary><span class="status-dot"></span><span>Select a project</span></div>
+      <div class="outline-title"><span>Projects</span><small data-project-count aria-live="polite">0</small></div>
+      <div class="project-list" data-project-list role="listbox" aria-label="Projects" tabindex="0"></div>
+      <div class="source-summary"><span class="section-label">Evidence sources</span><ul data-source-summary></ul></div>
+    </aside>
 
-        <section class="metrics" aria-label="BuildGraph snapshot metrics">
-          <article><span class="metric-icon">PR</span><div><small>Projects</small><strong>87</strong><p>Normalized project records</p></div></article>
-          <article><span class="metric-icon">AS</span><div><small>Assets</small><strong>3,601</strong><p>Indexed artifacts and files</p></div></article>
-          <article><span class="metric-icon alert">DP</span><div><small>Duplicates Found</small><strong>487</strong><p>Possible relationships for review</p></div></article>
-        </section>
-
-        <section class="content-grid">
-          <article class="panel duplicate-panel">
-            <div class="panel-head"><div><p class="eyebrow">Similarity review</p><h2>Top Duplicates</h2></div><select data-sort aria-label="Sort observed relationship examples"><option value="source">Snapshot order</option><option value="name">Name A–Z</option></select></div>
-            <p class="panel-note">These filenames are observed examples from the verified import bundle. They remain review candidates, not autonomous merge or deletion decisions. Presence bars are provenance indicators, not similarity scores.</p>
-            <div class="duplicate-list" data-duplicates>
-              <div class="duplicate-row" data-name="Nichesmith_Real_Estate_Agent_Prompt_Pack.docx Nichesmith_Loan_Officer_Prompt_Pack.docx" data-order="1"><span class="row-icon red">NP</span><div><strong>Nichesmith_Real_Estate_Agent_Prompt_Pack.docx</strong><small>Related observed item: Nichesmith_Loan_Officer_Prompt_Pack.docx</small></div><div class="overlap" aria-label="Observed in verified snapshot"><i style="width:100%"></i></div><b>Observed</b><button data-action="inspect" data-target="NicheSmith prompt-pack relationship">Inspect</button></div>
-              <div class="duplicate-row" data-name="nichesmith-logo-light.svg" data-order="2"><span class="row-icon amber">NL</span><div><strong>nichesmith-logo-light.svg</strong><small>Observed asset in the verified import bundle; relationship requires review.</small></div><div class="overlap" aria-label="Observed in verified snapshot"><i style="width:100%"></i></div><b>Observed</b><button data-action="inspect" data-target="nichesmith-logo-light.svg">Inspect</button></div>
-              <div class="duplicate-row" data-name="support.js" data-order="3"><span class="row-icon green">JS</span><div><strong>support.js</strong><small>Observed filename in the verified import bundle; no duplicate decision is implied.</small></div><div class="overlap" aria-label="Observed in verified snapshot"><i style="width:100%"></i></div><b>Observed</b><button data-action="inspect" data-target="support.js">Inspect</button></div>
-            </div>
-          </article>
-
-          <aside class="panel graph-panel">
-            <div class="panel-head"><div><p class="eyebrow">Knowledge Graph</p><h2>Reuse neighborhood</h2></div><span>Review visualization</span></div>
-            <div class="graph" aria-label="Abstract project graph">
-              <svg viewBox="0 0 360 280" role="img" aria-label="Connected projects and assets">
-                <g stroke="rgba(102,183,255,.28)" stroke-width="1.5"><path d="M180 138L72 58M180 138L91 210M180 138L270 54M180 138L295 184M72 58L270 54M91 210L295 184M72 58L42 140M295 184L329 105"/></g>
-                <g class="nodes"><circle cx="180" cy="138" r="34"/><circle cx="72" cy="58" r="19"/><circle cx="91" cy="210" r="23"/><circle cx="270" cy="54" r="18"/><circle cx="295" cy="184" r="25"/><circle cx="42" cy="140" r="13"/><circle cx="329" cy="105" r="14"/></g>
-                <g fill="#d8eaff" font-size="9" text-anchor="middle"><text x="180" y="142">BuildGraph</text><text x="72" y="61">API</text><text x="91" y="213">UI</text><text x="270" y="57">Data</text><text x="295" y="187">Ops</text><text x="42" y="143">Docs</text><text x="329" y="108">Tests</text></g>
-              </svg>
-            </div>
-            <div class="graph-legend"><span><i></i>Project</span><span><i></i>Reusable asset</span><span><i></i>Possible duplicate</span></div>
-          </aside>
-        </section>
-
-        <section class="project-panel panel">
-          <div class="panel-head"><div><p class="eyebrow">Observed memory</p><h2>Project index</h2></div><span data-result-count>4 visible records</span></div>
-          <div class="project-grid" data-projects>
-            <article data-name="HostGraph-Procurement-Command-Center"><span>HG</span><strong>HostGraph-Procurement-Command-Center</strong><p>Observed repository project in the verified import bundle.</p><small>Snapshot evidence only · no inferred asset total</small></article>
-            <article data-name="tradewind-dealflow"><span>TW</span><strong>tradewind-dealflow</strong><p>Observed repository project in the verified import bundle.</p><small>Snapshot evidence only · no inferred asset total</small></article>
-            <article data-name="BeyondMythos.com"><span>BM</span><strong>BeyondMythos.com</strong><p>Observed repository project in the verified import bundle.</p><small>Snapshot evidence only · no inferred asset total</small></article>
-            <article data-name="-MoviesRule.com"><span>MR</span><strong>-MoviesRule.com</strong><p>Observed repository project in the verified import bundle.</p><small>Snapshot evidence only · no inferred asset total</small></article>
+    <main class="workspace" id="mindmap">
+      <section class="map-panel" aria-labelledby="map-title">
+        <div class="map-toolbar">
+          <div><span class="section-label">Focus Ring MindMap</span><h1 id="map-title" data-map-title>Project ecosystem</h1></div>
+          <div class="map-toolbar-actions">
+            <button type="button" data-action="fit-map" aria-label="Fit map" title="Fit map"><i class="ri-focus-3-line" aria-hidden="true"></i><span>Fit</span></button>
+            <button type="button" data-action="focus-selected" aria-label="Focus selected project" title="Focus selected project"><i class="ri-crosshair-2-line" aria-hidden="true"></i><span>Focus</span></button>
+            <button type="button" data-action="expand-all" aria-label="Expand all MindMap branches"><i class="ri-expand-up-down-line" aria-hidden="true"></i><span>Expand all</span></button>
+            <button type="button" data-action="collapse-all" aria-label="Collapse MindMap branches"><i class="ri-collapse-diagonal-line" aria-hidden="true"></i><span>Collapse</span></button>
           </div>
-        </section>
-      </main>
+        </div>
+
+        <div class="map-viewport" data-map-viewport tabindex="0" aria-label="Interactive circular project MindMap. Use arrow keys to move between projects and Enter to open details.">
+          <div class="ring ring-outer" aria-hidden="true"></div><div class="ring ring-middle" aria-hidden="true"></div><div class="ring ring-inner" aria-hidden="true"></div>
+          <svg class="graph-connectors" data-connectors aria-hidden="true"></svg>
+          <div class="map-nodes" data-map-nodes></div>
+          <div class="map-empty" data-map-empty hidden><i class="ri-search-eye-line" aria-hidden="true"></i><strong>No projects match these filters</strong><span>Clear filters or import a local catalog.</span><button type="button" data-action="clear-filters">Clear filters</button></div>
+          <div class="minimap" aria-label="MindMap overview" data-minimap></div>
+          <div class="map-controls" role="group" aria-label="Map zoom controls"><button type="button" data-action="zoom-out" aria-label="Zoom out"><i class="ri-subtract-line" aria-hidden="true"></i></button><output data-zoom>100%</output><button type="button" data-action="zoom-in" aria-label="Zoom in"><i class="ri-add-line" aria-hidden="true"></i></button><button type="button" data-action="fit-map" aria-label="Fit map"><i class="ri-fullscreen-line" aria-hidden="true"></i></button></div>
+          <p class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navigate · <kbd>Enter</kbd> inspect · <kbd>+</kbd><kbd>−</kbd> zoom</p>
+        </div>
+
+        <div class="lifecycle-legend" aria-label="Lifecycle legend"><span><i class="status-dot status-active"></i>Active</span><span><i class="status-dot status-experimental"></i>Experimental</span><span><i class="status-dot status-paused"></i>Paused / blocked</span><span><i class="status-dot status-completed"></i>Completed</span><span><i class="status-dot status-inactive"></i>Archived / inactive</span><small>Lifecycle reflects best available evidence; unverified states remain labeled.</small></div>
+      </section>
+    </main>
+
+    <aside class="inspector" aria-label="Selected project details">
+      <div class="inspector-tabs" role="tablist" aria-label="Project detail sections"><button id="project-tab-overview" role="tab" aria-selected="true" aria-controls="project-detail-panel" tabindex="0" data-tab="overview">Overview</button><button id="project-tab-repository" role="tab" aria-selected="false" aria-controls="project-detail-panel" tabindex="-1" data-tab="repository">Repository</button><button id="project-tab-activity" role="tab" aria-selected="false" aria-controls="project-detail-panel" tabindex="-1" data-tab="activity">Activity</button><button id="project-tab-documents" role="tab" aria-selected="false" aria-controls="project-detail-panel" tabindex="-1" data-tab="documents">Documents</button><button id="project-tab-connections" role="tab" aria-selected="false" aria-controls="project-detail-panel" tabindex="-1" data-tab="connections">Connections</button></div>
+      <div class="inspector-content" id="project-detail-panel" role="tabpanel" aria-labelledby="project-tab-overview" data-inspector><div class="inspector-empty"><i class="ri-cursor-line" aria-hidden="true"></i><strong>Select a project node</strong><span>Repository, activity, documents, and relationships will appear here.</span></div></div>
+    </aside>
+
+    <section class="activity-tray" data-activity-tray aria-label="Portfolio activity">
+      <div class="activity-tabs" role="tablist" aria-label="Activity categories"><button id="activity-tab-activity" role="tab" aria-selected="true" aria-controls="activity-panel" tabindex="0" data-activity-tab="activity">Activity <span data-activity-count>0</span></button><button id="activity-tab-issues" role="tab" aria-selected="false" aria-controls="activity-panel" tabindex="-1" data-activity-tab="issues">Issues <span data-issue-count>0</span></button><button id="activity-tab-pulls" role="tab" aria-selected="false" aria-controls="activity-panel" tabindex="-1" data-activity-tab="pulls">Pull requests <span data-pr-count>0</span></button><button id="activity-tab-commits" role="tab" aria-selected="false" aria-controls="activity-panel" tabindex="-1" data-activity-tab="commits">Commits <span data-commit-count>0</span></button><button id="activity-tab-documents" role="tab" aria-selected="false" aria-controls="activity-panel" tabindex="-1" data-activity-tab="documents">Documents <span data-document-count>0</span></button></div>
+      <div class="activity-actions"><button type="button" data-action="open-activity-details">Open in details <i class="ri-external-link-line" aria-hidden="true"></i></button><button type="button" data-action="toggle-activity" aria-label="Collapse activity tray"><i class="ri-arrow-down-s-line" aria-hidden="true"></i></button></div>
+      <div class="activity-feed" id="activity-panel" role="tabpanel" aria-labelledby="activity-tab-activity" data-activity-feed></div>
     </section>
 
-    <section class="statement"><p>Your organization’s memory layer. Search everything you have built. Find reuse. Prevent duplication.</p><div><span>Knowledge Graph</span><span>Search</span><span>Developer Tools</span><span>Provenance</span></div></section>
+    <footer class="privacy-bar"><span><i class="ri-shield-check-line" aria-hidden="true"></i>Public GitHub data is bundled; private catalog stays on this device.</span><span data-save-state>Local changes saved automatically</span></footer>
   </div>
-  <div class="toast" role="status" aria-live="polite" data-toast></div>
-  <script src="./app.js" defer></script>
+
+  <input type="file" accept="application/json,.json" data-import-input hidden>
+  <input type="file" data-document-input multiple hidden>
+
+  <dialog class="modal" data-edit-dialog aria-labelledby="edit-title">
+    <form method="dialog" data-edit-form>
+      <div class="modal-head"><div><span class="section-label">Project metadata</span><h2 id="edit-title">Edit project</h2></div><button value="cancel" aria-label="Close edit dialog"><i class="ri-close-line" aria-hidden="true"></i></button></div>
+      <div class="form-grid"><label class="wide"><span>Purpose</span><textarea name="purpose" rows="4" required></textarea></label><label><span>Status</span><select name="status"><option value="active">Active</option><option value="experimental">Experimental</option><option value="paused">Paused</option><option value="blocked">Blocked</option><option value="completed">Completed</option><option value="inactive">Inactive</option><option value="archived">Archived</option><option value="unknown">Unknown</option></select></label><label><span>Priority</span><select name="priority"><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="unassigned">Unassigned</option></select></label><label><span>Owner</span><input name="owner" autocomplete="off"></label><label><span>Health</span><select name="health"><option value="healthy">Healthy</option><option value="attention">Attention</option><option value="stale">Stale</option><option value="archived">Archived</option><option value="unknown">Unknown</option></select></label><label class="wide"><span>Tags <small>comma-separated</small></span><input name="tags" autocomplete="off"></label></div>
+      <div class="modal-actions"><button class="secondary" value="cancel">Cancel</button><button class="primary" value="save" data-action="save-metadata"><i class="ri-save-3-line" aria-hidden="true"></i>Save changes</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" data-connection-dialog aria-labelledby="connection-title">
+    <form method="dialog" data-connection-form>
+      <div class="modal-head"><div><span class="section-label">Graph relationship</span><h2 id="connection-title">Add connection</h2></div><button value="cancel" aria-label="Close connection dialog"><i class="ri-close-line" aria-hidden="true"></i></button></div>
+      <div class="form-grid"><label class="wide"><span>From</span><select name="source" required></select></label><label class="wide"><span>To</span><select name="target" required></select></label><label><span>Relationship</span><select name="type"><option value="depends-on">Depends on</option><option value="reuses">Reuses</option><option value="integrates-with">Integrates with</option><option value="deployed-by">Deployed by</option><option value="contains">Contains</option><option value="related">Related</option></select></label><label><span>Label</span><input name="label" placeholder="Optional context" autocomplete="off"></label></div>
+      <div class="modal-actions"><button class="secondary" value="cancel">Cancel</button><button class="primary" value="save" data-action="save-connection"><i class="ri-node-tree" aria-hidden="true"></i>Add connection</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal import-modal" data-import-dialog aria-labelledby="import-title"><form method="dialog"><div class="modal-head"><div><span class="section-label">Local workspace import</span><h2 id="import-title">Import catalog</h2></div><button value="cancel" aria-label="Close import dialog"><i class="ri-close-line" aria-hidden="true"></i></button></div><p data-import-summary>Choose how to apply this catalog. Imported private metadata remains in this browser.</p><div class="import-options"><button class="secondary" value="merge" data-action="apply-import-merge"><i class="ri-git-merge-line" aria-hidden="true"></i><strong>Merge</strong><span>Keep bundled and existing local projects.</span></button><button class="danger-subtle" value="replace" data-action="apply-import-replace"><i class="ri-swap-box-line" aria-hidden="true"></i><strong>Replace local workspace</strong><span>Keep bundled public evidence, replace local imports.</span></button></div></form></dialog>
+
+  <dialog class="modal document-modal" data-document-dialog aria-labelledby="document-title"><form method="dialog"><div class="modal-head"><div><span class="section-label">Project document</span><h2 id="document-title" data-document-title>Document preview</h2></div><button value="cancel" aria-label="Close document preview"><i class="ri-close-line" aria-hidden="true"></i></button></div><div class="document-preview" data-document-preview></div><div class="modal-actions"><button class="danger-subtle" value="delete" data-action="delete-document"><i class="ri-delete-bin-6-line" aria-hidden="true"></i>Delete</button><button class="secondary" value="download" data-action="download-document"><i class="ri-download-line" aria-hidden="true"></i>Download</button><button class="primary" value="cancel">Close preview</button></div></form></dialog>
+
+  <dialog class="modal confirm-modal" data-confirm-dialog aria-labelledby="confirm-title"><form method="dialog"><div class="modal-head"><div><span class="section-label">Confirm action</span><h2 id="confirm-title" data-confirm-title>Are you sure?</h2></div></div><p data-confirm-message>This action cannot be undone.</p><div class="modal-actions"><button class="secondary" value="cancel">Cancel</button><button class="danger" value="confirm" data-confirm-button>Confirm</button></div></form></dialog>
+
+  <div class="toast-region" role="status" aria-live="polite" aria-atomic="true" data-toast-region></div>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
