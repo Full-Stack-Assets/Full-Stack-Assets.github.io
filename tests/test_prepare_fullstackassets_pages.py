@@ -114,19 +114,22 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
 
 
 class PagesWorkflowTests(unittest.TestCase):
-    def test_workflow_deploys_verified_artifact_after_legacy_build(self) -> None:
+    def test_workflow_deploys_verified_artifact_after_builtin_pages_run(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "fullstackassets-pages.yml").read_text(
             encoding="utf-8"
         )
 
         self.assertNotIn("build_type=workflow", workflow)
-        self.assertIn("Wait for legacy Pages build for this commit", workflow)
-        self.assertIn('repos/${GITHUB_REPOSITORY}/pages/builds/latest', workflow)
-        self.assertIn('\"$legacy_commit\" == \"$GITHUB_SHA\"', workflow)
-        self.assertIn('\"$legacy_status\" == \"built\"', workflow)
-        self.assertIn('\"$legacy_status\" == \"errored\"', workflow)
+        self.assertIn("actions: read", workflow)
+        self.assertIn("Wait for built-in Pages deployment for this commit", workflow)
+        self.assertIn("event=dynamic", workflow)
+        self.assertIn("pages build and deployment", workflow)
+        self.assertIn('\"$pages_head_sha\" == \"$GITHUB_SHA\"', workflow)
+        self.assertIn('\"$pages_status\" == \"completed\"', workflow)
+        self.assertIn('\"$pages_conclusion\" == \"success\"', workflow)
+        self.assertNotIn("pages/builds/latest", workflow)
         self.assertLess(
-            workflow.index("Wait for legacy Pages build for this commit"),
+            workflow.index("Wait for built-in Pages deployment for this commit"),
             workflow.index("Upload Pages artifact"),
         )
         production_condition = (

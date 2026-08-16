@@ -17,6 +17,7 @@ on:
     - cron: '17 * * * *'
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -74,7 +75,7 @@ jobs:
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
-      - name: Wait for legacy Pages build for this commit
+      - name: Wait for built-in Pages deployment for this commit
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
         env:
@@ -89,25 +90,27 @@ jobs:
           fi
 
           for attempt in {1..48}; do
-            legacy_build="$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest")"
-            legacy_commit="$(jq -r '.commit // ""' <<<"$legacy_build")"
-            legacy_status="$(jq -r '.status // ""' <<<"$legacy_build")"
+            pages_runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${GITHUB_SHA}&event=dynamic&per_page=100")"
+            pages_run="$(jq -c '[.workflow_runs[] | select(.name == "pages build and deployment")] | sort_by(.created_at) | last // {}' <<<"$pages_runs")"
+            pages_head_sha="$(jq -r '.head_sha // ""' <<<"$pages_run")"
+            pages_status="$(jq -r '.status // ""' <<<"$pages_run")"
+            pages_conclusion="$(jq -r '.conclusion // ""' <<<"$pages_run")"
 
-            if [[ "$legacy_commit" == "$GITHUB_SHA" && "$legacy_status" == "built" ]]; then
-              echo "Legacy Pages build settled for $GITHUB_SHA; verified artifact will deploy last."
+            if [[ "$pages_head_sha" == "$GITHUB_SHA" && "$pages_status" == "completed" && "$pages_conclusion" == "success" ]]; then
+              echo "Built-in Pages deployment settled for $GITHUB_SHA; verified artifact will deploy last."
               exit 0
             fi
 
-            if [[ "$legacy_commit" == "$GITHUB_SHA" && "$legacy_status" == "errored" ]]; then
-              echo "Legacy Pages build failed for $GITHUB_SHA; refusing an ambiguous deployment." >&2
+            if [[ "$pages_head_sha" == "$GITHUB_SHA" && "$pages_status" == "completed" && "$pages_conclusion" != "success" ]]; then
+              echo "Built-in Pages deployment failed for $GITHUB_SHA; refusing an ambiguous deployment." >&2
               exit 1
             fi
 
-            echo "Waiting for legacy Pages build for $GITHUB_SHA (attempt $attempt/48)."
+            echo "Waiting for built-in Pages deployment for $GITHUB_SHA (attempt $attempt/48)."
             sleep 5
           done
 
-          echo "Timed out waiting for the legacy Pages build for $GITHUB_SHA." >&2
+          echo "Timed out waiting for the built-in Pages deployment for $GITHUB_SHA." >&2
           exit 1
 
       - name: Upload Pages artifact
