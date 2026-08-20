@@ -17,6 +17,7 @@ PUBLIC_SOURCE_PATHS = (
     "assets",
     "blog",
     "case-studies",
+    "library",
     "purchase",
     "resume",
     "services",
@@ -24,7 +25,15 @@ PUBLIC_SOURCE_PATHS = (
     "sitemap.xml",
 )
 PRESERVED_HOST_PATHS = ("aetheria", "buildgraph")
-REQUIRED_ARTIFACT_FILES = ("index.html", "robots.txt", "sitemap.xml", "CNAME", ".nojekyll")
+REQUIRED_ARTIFACT_FILES = (
+    "index.html",
+    "robots.txt",
+    "sitemap.xml",
+    "library/index.html",
+    "library/search-index.json",
+    "CNAME",
+    ".nojekyll",
+)
 REQUIRED_HOST_FILES = (
     "aetheria/index.html",
     "aetheria/app.js",
@@ -90,7 +99,7 @@ def _strip_vercel_analytics(output_root: Path) -> None:
 
 
 def _audit_artifact(output_root: Path) -> None:
-    _validate_required_paths(output_root, REQUIRED_ARTIFACT_FILES, label="artifact")
+    _validate_required_files(output_root, REQUIRED_ARTIFACT_FILES, label="artifact")
     _validate_required_files(output_root, REQUIRED_HOST_FILES, label="artifact")
     _reject_symlinks(output_root)
 

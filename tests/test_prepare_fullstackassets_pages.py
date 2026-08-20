@@ -59,6 +59,11 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
                 '<script defer src="/_vercel/insights/script.js"></script><p>page</p>',
                 encoding="utf-8",
             )
+        (self.source / "library").mkdir()
+        (self.source / "library" / "index.html").write_text(
+            '<p>Agentic Capability Library</p>', encoding="utf-8"
+        )
+        (self.source / "library" / "search-index.json").write_text("[]\n", encoding="utf-8")
         (self.source / "assets" / "style.css").write_text("body{}", encoding="utf-8")
         (self.source / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
         (self.source / "sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
@@ -93,6 +98,8 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.assertTrue((self.output / "index.html").is_file())
         self.assertTrue((self.output / "aetheria" / "index.html").is_file())
         self.assertTrue((self.output / "buildgraph" / "index.html").is_file())
+        self.assertTrue((self.output / "library" / "index.html").is_file())
+        self.assertTrue((self.output / "library" / "search-index.json").is_file())
         for relative in HOST_RUNTIME_FILES:
             self.assertTrue((self.output / relative).is_file(), relative)
         self.assertEqual((self.output / "CNAME").read_text(encoding="utf-8"), "fullstackassets.com\n")
@@ -114,6 +121,17 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("missing required source path: sitemap.xml", result.stderr)
+
+    def test_fails_closed_when_generated_library_is_missing(self) -> None:
+        for path in sorted((self.source / "library").rglob("*"), reverse=True):
+            if path.is_file():
+                path.unlink()
+        (self.source / "library").rmdir()
+
+        result = self.run_builder()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing required source path: library", result.stderr)
 
     def test_fails_closed_when_a_host_runtime_file_is_missing(self) -> None:
         for relative in HOST_RUNTIME_FILES:
@@ -170,6 +188,29 @@ class PagesWorkflowTests(unittest.TestCase):
         self.assertIn("tests/buildgraph-interface.test.mjs", workflow)
         for relative in HOST_RUNTIME_FILES:
             self.assertIn(f"test -f site/{relative}", workflow)
+
+    def test_workflow_builds_canonical_library_before_apex_artifact(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "fullstackassets-pages.yml").read_text(
+            encoding="utf-8"
+        )
+        required = [
+            "Verify canonical Library source",
+            "Materialize canonical Library catalog",
+            "Inject canonical Library discovery link",
+            "Inject canonical Library sitemap root",
+            "Build canonical Library",
+            "Verify assembled canonical source",
+            "Build verified Pages artifact",
+        ]
+        for label in required:
+            self.assertIn(label, workflow)
+        positions = [workflow.index(label) for label in required]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("source/marketplace/bin/materialize-catalog.mjs", workflow)
+        self.assertIn("source/marketplace/bin/build-library.mjs", workflow)
+        self.assertIn("source/marketplace/bin/inject-library-discovery.mjs", workflow)
+        self.assertIn("source/marketplace/bin/inject-library-sitemap.mjs", workflow)
+        self.assertIn("test -f site/library/index.html", workflow)
 
 
 if __name__ == "__main__":
