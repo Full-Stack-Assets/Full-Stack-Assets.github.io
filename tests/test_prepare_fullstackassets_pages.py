@@ -52,7 +52,17 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
 """,
             encoding="utf-8",
         )
-        for directory in ("assets", "blog", "case-studies", "purchase", "resume", "services"):
+        for directory in (
+            "assets",
+            "blog",
+            "case-studies",
+            "my-library",
+            "publisher",
+            "enterprise",
+            "purchase",
+            "resume",
+            "services",
+        ):
             target = self.source / directory
             target.mkdir()
             (target / "index.html").write_text(
@@ -65,6 +75,9 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         )
         (self.source / "library" / "search-index.json").write_text("[]\n", encoding="utf-8")
         (self.source / "assets" / "style.css").write_text("body{}", encoding="utf-8")
+        (self.source / "assets" / "marketplace-auth.js").write_text(
+            "export const auth = true;\n", encoding="utf-8"
+        )
         (self.source / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
         (self.source / "sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
         (self.source / "products").mkdir()
@@ -100,6 +113,10 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.assertTrue((self.output / "buildgraph" / "index.html").is_file())
         self.assertTrue((self.output / "library" / "index.html").is_file())
         self.assertTrue((self.output / "library" / "search-index.json").is_file())
+        self.assertTrue((self.output / "my-library" / "index.html").is_file())
+        self.assertTrue((self.output / "publisher" / "index.html").is_file())
+        self.assertTrue((self.output / "enterprise" / "index.html").is_file())
+        self.assertTrue((self.output / "assets" / "marketplace-auth.js").is_file())
         for relative in HOST_RUNTIME_FILES:
             self.assertTrue((self.output / relative).is_file(), relative)
         self.assertEqual((self.output / "CNAME").read_text(encoding="utf-8"), "fullstackassets.com\n")

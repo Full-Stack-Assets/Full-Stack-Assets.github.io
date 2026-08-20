@@ -7,6 +7,7 @@ on:
       - '.github/workflows/fullstackassets-pages.yml'
       - 'tools/prepare_fullstackassets_pages.py'
       - 'tests/test_prepare_fullstackassets_pages.py'
+      - 'tests/test_marketplace_dynamic_routes.py'
       - 'tests/buildgraph-core.test.mjs'
       - 'tests/buildgraph-data.test.mjs'
       - 'tests/buildgraph-interface.test.mjs'
@@ -57,7 +58,7 @@ jobs:
           node-version: '22'
 
       - name: Test artifact builder
-        run: python -m unittest discover -s host/tests -p 'test_prepare_fullstackassets_pages.py' -v
+        run: python -m unittest discover -s host/tests -p 'test_*.py' -v
 
       - name: Test BuildGraph contracts
         run: >-
@@ -73,6 +74,14 @@ jobs:
           tests/marketplace/canon/*.test.mjs
           tests/marketplace/core/*.test.mjs
           tests/marketplace/catalog/*.test.mjs
+
+      - name: Verify dynamic marketplace browser source
+        run: >-
+          cd source && node --test
+          tests/marketplace/customer/my-library-ui.test.mjs
+          tests/marketplace/publisher/publisher-ui.test.mjs
+          tests/marketplace/enterprise/enterprise-ui.test.mjs
+          tests/marketplace/production/browser-integration.test.mjs
 
       - name: Materialize canonical Library catalog
         run: >-
@@ -115,6 +124,10 @@ jobs:
           test -f site/sitemap.xml
           test -f site/library/index.html
           test -f site/library/search-index.json
+          test -f site/my-library/index.html
+          test -f site/publisher/index.html
+          test -f site/enterprise/index.html
+          test -f site/assets/marketplace-auth.js
           test -f site/aetheria/index.html
           test -f site/aetheria/app.js
           test -f site/aetheria/styles.css
@@ -127,6 +140,8 @@ jobs:
           test "$(cat site/CNAME)" = "fullstackassets.com"
           grep -q 'href="/library/"' site/index.html
           grep -q 'https://fullstackassets.com/library/' site/sitemap.xml
+          grep -q 'functions/v1/marketplace-api' site/assets/marketplace-auth.js
+          grep -q 'shouldCreateUser:false' site/assets/marketplace-auth.js
           ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'
 
       - name: Configure GitHub Pages
