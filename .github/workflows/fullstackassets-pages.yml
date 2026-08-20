@@ -7,6 +7,7 @@ on:
       - '.github/workflows/fullstackassets-pages.yml'
       - 'tools/prepare_fullstackassets_pages.py'
       - 'tests/test_prepare_fullstackassets_pages.py'
+      - 'tests/test_marketplace_dynamic_routes.py'
       - 'tests/buildgraph-core.test.mjs'
       - 'tests/buildgraph-data.test.mjs'
       - 'tests/buildgraph-interface.test.mjs'
@@ -57,7 +58,7 @@ jobs:
           node-version: '22'
 
       - name: Test artifact builder
-        run: python -m unittest discover -s host/tests -p 'test_prepare_fullstackassets_pages.py' -v
+        run: python -m unittest discover -s host/tests -p 'test_*.py' -v
 
       - name: Test BuildGraph contracts
         run: >-
