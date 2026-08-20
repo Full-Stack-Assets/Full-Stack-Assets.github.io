@@ -66,6 +66,39 @@ jobs:
           host/tests/buildgraph-data.test.mjs
           host/tests/buildgraph-interface.test.mjs
 
+      - name: Verify canonical Library source
+        run: >-
+          node --test
+          source/tests/*.test.mjs
+          source/tests/marketplace/canon/*.test.mjs
+          source/tests/marketplace/core/*.test.mjs
+          source/tests/marketplace/catalog/*.test.mjs
+
+      - name: Materialize canonical Library catalog
+        run: >-
+          node source/marketplace/bin/materialize-catalog.mjs
+          --parts source/data/library/catalog-baseline
+          --meta source/data/library/catalog-baseline.json
+          --out source/data/library/catalog.snapshot.json
+
+      - name: Inject canonical Library discovery link
+        run: node source/marketplace/bin/inject-library-discovery.mjs --file source/index.html
+
+      - name: Inject canonical Library sitemap root
+        run: node source/marketplace/bin/inject-library-sitemap.mjs --file source/sitemap.xml
+
+      - name: Build canonical Library
+        run: >-
+          node source/marketplace/bin/build-library.mjs
+          --catalog source/data/library/catalog.snapshot.json
+          --out source/library
+
+      - name: Verify assembled canonical source
+        run: >-
+          node --test
+          source/tests/*.test.mjs
+          source/tests/marketplace/catalog/*.test.mjs
+
       - name: Build verified Pages artifact
         run: >-
           python host/tools/prepare_fullstackassets_pages.py
@@ -80,6 +113,8 @@ jobs:
           test -f site/index.html
           test -f site/robots.txt
           test -f site/sitemap.xml
+          test -f site/library/index.html
+          test -f site/library/search-index.json
           test -f site/aetheria/index.html
           test -f site/aetheria/app.js
           test -f site/aetheria/styles.css
@@ -90,6 +125,8 @@ jobs:
           test -f site/buildgraph/data/projects.json
           test -f site/.nojekyll
           test "$(cat site/CNAME)" = "fullstackassets.com"
+          grep -q 'href="/library/"' site/index.html
+          grep -q 'https://fullstackassets.com/library/' site/sitemap.xml
           ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'
 
       - name: Configure GitHub Pages
