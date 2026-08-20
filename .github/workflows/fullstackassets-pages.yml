@@ -68,11 +68,11 @@ jobs:
 
       - name: Verify canonical Library source
         run: >-
-          node --test
-          source/tests/*.test.mjs
-          source/tests/marketplace/canon/*.test.mjs
-          source/tests/marketplace/core/*.test.mjs
-          source/tests/marketplace/catalog/*.test.mjs
+          cd source && node --test
+          tests/*.test.mjs
+          tests/marketplace/canon/*.test.mjs
+          tests/marketplace/core/*.test.mjs
+          tests/marketplace/catalog/*.test.mjs
 
       - name: Materialize canonical Library catalog
         run: >-
@@ -95,9 +95,9 @@ jobs:
 
       - name: Verify assembled canonical source
         run: >-
-          node --test
-          source/tests/*.test.mjs
-          source/tests/marketplace/catalog/*.test.mjs
+          cd source && node --test
+          tests/*.test.mjs
+          tests/marketplace/catalog/*.test.mjs
 
       - name: Build verified Pages artifact
         run: >-
