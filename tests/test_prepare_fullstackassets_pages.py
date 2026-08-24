@@ -78,6 +78,9 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         (self.source / "assets" / "marketplace-auth.js").write_text(
             "export const auth = true;\n", encoding="utf-8"
         )
+        (self.source / "assets" / "library-acquire.js").write_text(
+            "export const endpoint = '/v1/acquire/free';\n", encoding="utf-8"
+        )
         (self.source / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
         (self.source / "sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
         (self.source / "products").mkdir()
@@ -117,6 +120,7 @@ class PrepareFullstackassetsPagesTests(unittest.TestCase):
         self.assertTrue((self.output / "publisher" / "index.html").is_file())
         self.assertTrue((self.output / "enterprise" / "index.html").is_file())
         self.assertTrue((self.output / "assets" / "marketplace-auth.js").is_file())
+        self.assertTrue((self.output / "assets" / "library-acquire.js").is_file())
         for relative in HOST_RUNTIME_FILES:
             self.assertTrue((self.output / relative).is_file(), relative)
         self.assertEqual((self.output / "CNAME").read_text(encoding="utf-8"), "fullstackassets.com\n")
@@ -228,6 +232,9 @@ class PagesWorkflowTests(unittest.TestCase):
         self.assertIn("source/marketplace/bin/inject-library-discovery.mjs", workflow)
         self.assertIn("source/marketplace/bin/inject-library-sitemap.mjs", workflow)
         self.assertIn("test -f site/library/index.html", workflow)
+        self.assertIn("test -f site/assets/library-acquire.js", workflow)
+        self.assertIn("/v1/acquire/free", workflow)
+        self.assertIn("expected exactly 10 FREE Library entries", workflow)
 
 
 if __name__ == "__main__":
