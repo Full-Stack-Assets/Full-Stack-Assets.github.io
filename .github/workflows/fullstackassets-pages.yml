@@ -128,6 +128,7 @@ jobs:
           test -f site/publisher/index.html
           test -f site/enterprise/index.html
           test -f site/assets/marketplace-auth.js
+          test -f site/assets/library-acquire.js
           test -f site/aetheria/index.html
           test -f site/aetheria/app.js
           test -f site/aetheria/styles.css
@@ -142,6 +143,17 @@ jobs:
           grep -q 'https://fullstackassets.com/library/' site/sitemap.xml
           grep -q 'functions/v1/marketplace-api' site/assets/marketplace-auth.js
           grep -q 'shouldCreateUser:false' site/assets/marketplace-auth.js
+          grep -q '/v1/acquire/free' site/assets/library-acquire.js
+          grep -R -q 'data-free-acquire' site/library --include='*.html'
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('site/library/search-index.json').read_text(encoding='utf-8'))
+          free_entries = [entry for entry in payload.get('entries', []) if entry.get('commercial_state') == 'FREE']
+          if len(free_entries) != 10:
+              raise SystemExit(f'expected exactly 10 FREE Library entries, found {len(free_entries)}')
+          PY
           ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'
 
       - name: Configure GitHub Pages

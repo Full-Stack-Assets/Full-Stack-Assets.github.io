@@ -27,6 +27,13 @@ class MarketplaceDynamicRouteContractTests(unittest.TestCase):
         ):
             self.assertIn(relative, builder.REQUIRED_ARTIFACT_FILES)
 
+    def test_apex_artifact_requires_first_ten_acquisition_client(self) -> None:
+        self.assertIn(
+            "assets/library-acquire.js",
+            builder.REQUIRED_ARTIFACT_FILES,
+            "the FREE/Add to Library client must be present in the deployed apex artifact",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

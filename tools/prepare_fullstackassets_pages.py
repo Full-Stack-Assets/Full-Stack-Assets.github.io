@@ -38,6 +38,7 @@ REQUIRED_ARTIFACT_FILES = (
     "publisher/index.html",
     "enterprise/index.html",
     "assets/marketplace-auth.js",
+    "assets/library-acquire.js",
     "CNAME",
     ".nojekyll",
 )
