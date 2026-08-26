@@ -1,0 +1,234 @@
+{
+  "api_version": "aoc/v1",
+  "kind": "RevenueReadyReleaseEvidence",
+  "policy_id": "POL-REV-001",
+  "policy_version": "1.0.0",
+  "project_id": "Full-Stack-Assets.github.io",
+  "release": {
+    "iteration": 1,
+    "candidate": "first-customer-facing-commercial-release",
+    "evaluated_at": "2026-08-26T06:00:00Z"
+  },
+  "decision": "BLOCKED",
+  "criteria": {
+    "specific_buyer": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "urgent_problem": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "compelling_offer": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "pricing_model": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "proof": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "customer_source": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "acquisition_channel": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "conversion_mechanism": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "payment_infrastructure": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "fulfillment_system": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "onboarding": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "customer_support": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "retention_mechanism": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "expansion_path": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "unit_economics": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "measurement": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "legal_operational_basics": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "automation": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "accountability": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "continuous_demand_validation": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    }
+  },
+  "first_dollar_stack": {
+    "painful_problem": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "defined_buyer": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "fixed_offer": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "price": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "proof_asset": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "qualified_lead_source": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "sales_path": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "payment_path": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "fulfillment_path": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    },
+    "direct_outreach_and_follow_up": {
+      "status": "BLOCKED",
+      "owner": "Full-Stack-Assets portfolio owner",
+      "evidence_refs": [],
+      "notes": "Commercial release is blocked until current source-backed evidence is supplied and validated.",
+      "validated_at": "2026-08-26T06:00:00Z"
+    }
+  },
+  "attestations": {
+    "claims_source_backed": false,
+    "no_synthetic_customer_proof": false,
+    "payment_path_verified": false,
+    "paying_demand_verified": false,
+    "human_authority_gates_preserved": true
+  }
+}

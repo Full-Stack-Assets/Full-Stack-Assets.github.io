@@ -1,0 +1,29 @@
+name: revenue-ready-release
+
+on:
+  workflow_call:
+    inputs:
+      manifest:
+        required: false
+        type: string
+        default: .aoc/revenue-ready-release.json
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: Revenue readiness manifest path
+        required: false
+        default: .aoc/revenue-ready-release.json
+
+permissions:
+  contents: read
+
+jobs:
+  revenue-ready-release:
+    name: revenue-ready-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Full-Stack-Assets/Canon/.github/actions/revenue-ready-release@main
+        with:
+          manifest: ${{ inputs.manifest || '.aoc/revenue-ready-release.json' }}
+
