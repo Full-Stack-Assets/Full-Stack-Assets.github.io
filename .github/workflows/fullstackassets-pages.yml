@@ -8,12 +8,7 @@ on:
       - 'tools/prepare_fullstackassets_pages.py'
       - 'tests/test_prepare_fullstackassets_pages.py'
       - 'tests/test_marketplace_dynamic_routes.py'
-      - 'tests/buildgraph-core.test.mjs'
-      - 'tests/buildgraph-data.test.mjs'
-      - 'tests/buildgraph-interface.test.mjs'
       - 'CNAME'
-      - 'aetheria/**'
-      - 'buildgraph/**'
   push:
     branches: [main]
   workflow_dispatch:
@@ -52,61 +47,8 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Test artifact builder
+      - name: Test résumé-only artifact builder
         run: python -m unittest discover -s host/tests -p 'test_*.py' -v
-
-      - name: Test BuildGraph contracts
-        run: >-
-          node --test
-          host/tests/buildgraph-core.test.mjs
-          host/tests/buildgraph-data.test.mjs
-          host/tests/buildgraph-interface.test.mjs
-
-      - name: Verify canonical Library source
-        run: >-
-          cd source && node --test
-          tests/*.test.mjs
-          tests/marketplace/canon/*.test.mjs
-          tests/marketplace/core/*.test.mjs
-          tests/marketplace/catalog/*.test.mjs
-
-      - name: Verify dynamic marketplace browser source
-        run: >-
-          cd source && node --test
-          tests/marketplace/customer/my-library-ui.test.mjs
-          tests/marketplace/publisher/publisher-ui.test.mjs
-          tests/marketplace/enterprise/enterprise-ui.test.mjs
-          tests/marketplace/production/browser-integration.test.mjs
-
-      - name: Materialize canonical Library catalog
-        run: >-
-          node source/marketplace/bin/materialize-catalog.mjs
-          --parts source/data/library/catalog-baseline
-          --meta source/data/library/catalog-baseline.json
-          --out source/data/library/catalog.snapshot.json
-
-      - name: Inject canonical Library discovery link
-        run: node source/marketplace/bin/inject-library-discovery.mjs --file source/index.html
-
-      - name: Inject canonical Library sitemap root
-        run: node source/marketplace/bin/inject-library-sitemap.mjs --file source/sitemap.xml
-
-      - name: Build canonical Library
-        run: >-
-          node source/marketplace/bin/build-library.mjs
-          --catalog source/data/library/catalog.snapshot.json
-          --out source/library
-
-      - name: Verify assembled canonical source
-        run: >-
-          cd source && node --test
-          tests/*.test.mjs
-          tests/marketplace/catalog/*.test.mjs
 
       - name: Build verified Pages artifact
         run: >-
@@ -115,45 +57,28 @@ jobs:
           --source source
           --output site
 
-      - name: Verify deployment artifact
+      - name: Verify résumé-only Pages artifact
         shell: bash
         run: |
           set -euo pipefail
           test -f site/index.html
           test -f site/robots.txt
           test -f site/sitemap.xml
-          test -f site/library/index.html
-          test -f site/library/search-index.json
-          test -f site/my-library/index.html
-          test -f site/publisher/index.html
-          test -f site/enterprise/index.html
-          test -f site/assets/marketplace-auth.js
-          test -f site/assets/library-acquire.js
-          test -f site/aetheria/index.html
-          test -f site/aetheria/app.js
-          test -f site/aetheria/styles.css
-          test -f site/buildgraph/index.html
-          test -f site/buildgraph/app.js
-          test -f site/buildgraph/core.mjs
-          test -f site/buildgraph/styles.css
-          test -f site/buildgraph/data/projects.json
+          test -f site/resume/index.html
+          test -f site/services/index.html
           test -f site/.nojekyll
           test "$(cat site/CNAME)" = "fullstackassets.com"
-          grep -q 'href="/library/"' site/index.html
-          grep -q 'https://fullstackassets.com/library/' site/sitemap.xml
-          grep -q 'functions/v1/marketplace-api' site/assets/marketplace-auth.js
-          grep -q 'shouldCreateUser:false' site/assets/marketplace-auth.js
-          grep -q '/v1/acquire/free' site/assets/library-acquire.js
-          grep -R -q 'data-free-acquire' site/library --include='*.html'
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          payload = json.loads(Path('site/library/search-index.json').read_text(encoding='utf-8'))
-          free_entries = [entry for entry in payload.get('entries', []) if entry.get('commercial_state') == 'FREE']
-          if len(free_entries) != 10:
-              raise SystemExit(f'expected exactly 10 FREE Library entries, found {len(free_entries)}')
-          PY
+          test ! -e site/library
+          test ! -e site/my-library
+          test ! -e site/publisher
+          test ! -e site/enterprise
+          test ! -e site/purchase
+          test ! -e site/aetheria
+          test ! -e site/buildgraph
+          test ! -e site/assets/marketplace-auth.js
+          test ! -e site/assets/library-acquire.js
+          ! grep -q 'href="/library/"' site/index.html
+          ! grep -q 'https://fullstackassets.com/library/' site/sitemap.xml
           ! grep -R -n -E '/_vercel/insights|window\.va' site --include='*.html'
 
       - name: Configure GitHub Pages

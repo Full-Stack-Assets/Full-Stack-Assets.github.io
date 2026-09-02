@@ -13,26 +13,20 @@ assert spec.loader is not None
 spec.loader.exec_module(builder)
 
 
-class MarketplaceDynamicRouteContractTests(unittest.TestCase):
-    def test_apex_builder_copies_all_dynamic_marketplace_route_trees(self) -> None:
-        for route in ("my-library", "publisher", "enterprise"):
-            self.assertIn(route, builder.PUBLIC_SOURCE_PATHS)
+class ResumeApexRouteContractTests(unittest.TestCase):
+    def test_apex_builder_does_not_copy_marketplace_route_trees(self) -> None:
+        for route in ("library", "my-library", "publisher", "enterprise", "purchase"):
+            self.assertNotIn(route, builder.PUBLIC_SOURCE_PATHS)
 
-    def test_apex_artifact_requires_dynamic_roots_and_shared_auth_asset(self) -> None:
-        for relative in (
-            "my-library/index.html",
-            "publisher/index.html",
-            "enterprise/index.html",
-            "assets/marketplace-auth.js",
-        ):
-            self.assertIn(relative, builder.REQUIRED_ARTIFACT_FILES)
+    def test_apex_builder_does_not_copy_host_product_shells(self) -> None:
+        for route in ("aetheria", "buildgraph"):
+            self.assertNotIn(route, builder.PUBLIC_SOURCE_PATHS)
+            self.assertIn(route, builder.FORBIDDEN_PUBLIC_PATHS)
 
-    def test_apex_artifact_requires_first_ten_acquisition_client(self) -> None:
-        self.assertIn(
-            "assets/library-acquire.js",
-            builder.REQUIRED_ARTIFACT_FILES,
-            "the FREE/Add to Library client must be present in the deployed apex artifact",
-        )
+    def test_apex_artifact_forbids_marketplace_clients(self) -> None:
+        for name in ("marketplace-auth.js", "library-acquire.js"):
+            self.assertIn(name, builder.EXCLUDED_ASSET_FILES)
+            self.assertNotIn(f"assets/{name}", builder.REQUIRED_ARTIFACT_FILES)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and verify the Fullstackassets.com GitHub Pages artifact."""
+"""Build and verify the résumé-only fullstackassets.com GitHub Pages artifact."""
 
 from __future__ import annotations
 
@@ -17,40 +17,30 @@ PUBLIC_SOURCE_PATHS = (
     "assets",
     "blog",
     "case-studies",
-    "library",
-    "my-library",
-    "publisher",
-    "enterprise",
-    "purchase",
     "resume",
     "services",
     "robots.txt",
     "sitemap.xml",
 )
-PRESERVED_HOST_PATHS = ("aetheria", "buildgraph")
+EXCLUDED_ASSET_FILES = (
+    "marketplace-auth.js",
+    "library-acquire.js",
+)
+FORBIDDEN_PUBLIC_PATHS = (
+    "library",
+    "my-library",
+    "publisher",
+    "enterprise",
+    "purchase",
+    "aetheria",
+    "buildgraph",
+)
 REQUIRED_ARTIFACT_FILES = (
     "index.html",
     "robots.txt",
     "sitemap.xml",
-    "library/index.html",
-    "library/search-index.json",
-    "my-library/index.html",
-    "publisher/index.html",
-    "enterprise/index.html",
-    "assets/marketplace-auth.js",
-    "assets/library-acquire.js",
     "CNAME",
     ".nojekyll",
-)
-REQUIRED_HOST_FILES = (
-    "aetheria/index.html",
-    "aetheria/app.js",
-    "aetheria/styles.css",
-    "buildgraph/index.html",
-    "buildgraph/app.js",
-    "buildgraph/core.mjs",
-    "buildgraph/styles.css",
-    "buildgraph/data/projects.json",
 )
 
 VERCEL_BOOTSTRAP_RE = re.compile(
@@ -98,6 +88,16 @@ def _copy_path(source_root: Path, output_root: Path, relative: str) -> None:
         shutil.copy2(source, destination)
 
 
+def _strip_marketplace_assets(output_root: Path) -> None:
+    assets = output_root / "assets"
+    if not assets.is_dir():
+        return
+    for name in EXCLUDED_ASSET_FILES:
+        target = assets / name
+        if target.is_file() or target.is_symlink():
+            target.unlink()
+
+
 def _strip_vercel_analytics(output_root: Path) -> None:
     for html_path in output_root.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8")
@@ -108,12 +108,27 @@ def _strip_vercel_analytics(output_root: Path) -> None:
 
 def _audit_artifact(output_root: Path) -> None:
     _validate_required_files(output_root, REQUIRED_ARTIFACT_FILES, label="artifact")
-    _validate_required_files(output_root, REQUIRED_HOST_FILES, label="artifact")
     _reject_symlinks(output_root)
 
     cname = (output_root / "CNAME").read_text(encoding="utf-8")
     if cname != f"{DOMAIN}\n":
         raise ArtifactError(f"CNAME must contain exactly {DOMAIN}")
+
+    for relative in FORBIDDEN_PUBLIC_PATHS:
+        if (output_root / relative).exists():
+            raise ArtifactError(f"marketplace or product path must not ship on the résumé apex: {relative}")
+
+    for name in EXCLUDED_ASSET_FILES:
+        if (output_root / "assets" / name).exists():
+            raise ArtifactError(f"marketplace asset must not ship on the résumé apex: assets/{name}")
+
+    sitemap = (output_root / "sitemap.xml").read_text(encoding="utf-8")
+    if "https://fullstackassets.com/library/" in sitemap:
+        raise ArtifactError("sitemap must not include the library catalog URL")
+
+    index_html = (output_root / "index.html").read_text(encoding="utf-8")
+    if 'href="/library/"' in index_html:
+        raise ArtifactError("résumé index must not inject library discovery")
 
     for html_path in output_root.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8")
@@ -122,7 +137,7 @@ def _audit_artifact(output_root: Path) -> None:
 
 
 def prepare_site(host_root: Path, source_root: Path, output_root: Path) -> None:
-    """Create a clean Pages artifact from the host and canonical source repositories."""
+    """Create a résumé-only Pages artifact from the host and canonical source repositories."""
     host_root = host_root.resolve()
     source_root = source_root.resolve()
     output_root = output_root.resolve()
@@ -135,8 +150,6 @@ def prepare_site(host_root: Path, source_root: Path, output_root: Path) -> None:
         raise ArtifactError("output directory must be separate from both repositories")
 
     _validate_required_paths(source_root, PUBLIC_SOURCE_PATHS, label="source")
-    _validate_required_paths(host_root, PRESERVED_HOST_PATHS, label="host")
-    _validate_required_files(host_root, REQUIRED_HOST_FILES, label="host")
     _reject_symlinks(source_root)
     _reject_symlinks(host_root)
 
@@ -144,10 +157,10 @@ def prepare_site(host_root: Path, source_root: Path, output_root: Path) -> None:
         shutil.rmtree(output_root)
     output_root.mkdir(parents=True)
 
-    for relative in PRESERVED_HOST_PATHS:
-        _copy_path(host_root, output_root, relative)
     for relative in PUBLIC_SOURCE_PATHS:
         _copy_path(source_root, output_root, relative)
+
+    _strip_marketplace_assets(output_root)
 
     (output_root / "CNAME").write_text(f"{DOMAIN}\n", encoding="utf-8")
     (output_root / ".nojekyll").touch()
